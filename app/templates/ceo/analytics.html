@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %} - Business Analytics{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>📊 Internal Business Analytics</h2>
+        <p class="text-muted">Live data from your uploaded records.</p>
+    </div>
+</div>
+
+{% if data %}
+
+<!-- Financial KPI Cards -->
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card text-white" style="background-color:#1a1a2e;">
+            <div class="card-body text-center">
+                <h6>Total Revenue</h6>
+                <h4>₹{{ "{:,.0f}".format(data.financials.total_revenue) }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h6>Gross Profit</h6>
+                <h4>₹{{ "{:,.0f}".format(data.financials.total_gross_profit) }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-danger">
+            <div class="card-body text-center">
+                <h6>Expenses</h6>
+                <h4>₹{{ "{:,.0f}".format(data.financials.total_expenses) }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white" style="background-color:#e94560;">
+            <div class="card-body text-center">
+                <h6>Net Profit</h6>
+                <h4>₹{{ "{:,.0f}".format(data.financials.net_profit) }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h6>Profit Margin</h6>
+                <h4>{{ data.financials.profit_margin_percent }}%</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h6>Units Sold</h6>
+                <h4>{{ "{:,}".format(data.financials.total_units_sold) }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+
+    <!-- Top Products -->
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5>🏆 Top Products by Revenue</h5>
+                <table class="table table-sm mt-3">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Revenue</th>
+                            <th>Units</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i, p in enumerate(data.top_products) %}
+                        <tr>
+                            <td>{{ i+1 }}</td>
+                            <td>{{ p.product }}</td>
+                            <td>₹{{ "{:,.0f}".format(p.revenue) }}</td>
+                            <td>{{ p.units }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Performance -->
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5>📦 Category Performance</h5>
+                <table class="table table-sm mt-3">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Revenue</th>
+                            <th>Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in data.category_performance %}
+                        <tr>
+                            <td>{{ c.category }}</td>
+                            <td>₹{{ "{:,.0f}".format(c.revenue) }}</td>
+                            <td>₹{{ "{:,.0f}".format(c.profit) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    
+
+
+
+{% else %}
+<div class="alert alert-warning">
+    No data available. Ask HR to upload sales, inventory and expense data first.
+</div>
+{% endif %}
+
+
+
+{% if data and data.expense_breakdown %}
+const expLabels = {{ data.expense_breakdown | map(attribute='category') | list | tojson }};
+const expData = {{ data.expense_breakdown | map(attribute='total') | list | tojson }};
+
+new Chart(document.getElementById('expenseChart'), {
+    type: 'doughnut',
+    data: {
+        labels: expLabels,
+        datasets: [{
+            data: expData,
+            backgroundColor: [
+                '#1a1a2e','#e94560','#16213e',
+                '#0f3460','#533483','#2b9348'
+            ]
+        }]
+    },
+    options: { responsive: true }
+});
+{% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CEO AI Chat</title>
+</head>
+<body>
+
+    <h1>CEO AI Strategic Chat</h1>
+
+    <form id="chatForm">
+        <input type="text" id="message" placeholder="Ask business question..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <h3>AI Response:</h3>
+    <div id="responseBox" style="margin-top:10px; font-weight:bold;"></div>
+
+<script>
+document.getElementById("chatForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const message = document.getElementById("message").value;
+
+    const response = await fetch("/ceo/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: message })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("responseBox").innerText = data.response;
+});
+</script>
+
+</body>
+</html>

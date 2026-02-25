@@ -1,0 +1,53 @@
+/* Login Background */
+.login-wrapper {
+    min-height: 90vh;
+    background: linear-gradient(135deg, #1E3A8A, #0F172A);
+}
+
+/* Login Card */
+.login-card {
+    border-radius: 16px;
+    background: #ffffff;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Brand Title */
+.brand-title {
+    color: #1E3A8A;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Custom Inputs */
+.custom-input {
+    border-radius: 10px;
+    padding: 10px 14px;
+    border: 1px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.custom-input:focus {
+    border-color: #1E3A8A;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+/* Login Button */
+.login-btn {
+    background-color: #1E3A8A;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #172554;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Smooth Fade Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

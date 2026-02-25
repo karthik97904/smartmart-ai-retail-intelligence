@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %} - Upload Data{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>📂 Upload Business Data</h2>
+        <p class="text-muted">Upload CSV or Excel files to feed the AI engine.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Upload File</h5>
+                <form method="POST" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Data Type</label>
+                        <select name="data_type" class="form-select" required>
+                            <option value="">-- Select Data Type --</option>
+                            <option value="sales">Sales Data</option>
+                        
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select File</label>
+                        <input type="file" name="file" class="form-control"
+                               accept=".csv,.xlsx,.xls" required>
+                        <div class="form-text">Supported: CSV, XLSX, XLS (Max 16MB)</div>
+                    </div>
+
+                    <button type="submit" class="btn text-white w-100"
+                            style="background-color:#e94560;">
+                        Upload & Process
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title">📋 Required Columns</h5>
+                <div id="column-guide">
+                    <div class="alert alert-info">
+                        Select a data type to see required columns.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const columnGuide = {
+    sales: ["date", "product_name", "category", "quantity_sold",
+            "unit_price", "total_revenue", "cost_price", "gross_profit",
+            "region (optional)", "store_id (optional)"],
+    
+};
+
+document.querySelector('select[name="data_type"]').addEventListener('change', function() {
+    const type = this.value;
+    const guide = document.getElementById('column-guide');
+    if (type && columnGuide[type]) {
+        let html = '<p class="fw-bold">Required columns for <span class="text-danger">'
+                    + type + '</span>:</p><ul>';
+        columnGuide[type].forEach(col => {
+            html += `<li><code>${col}</code></li>`;
+        });
+        html += '</ul>';
+        guide.innerHTML = html;
+    } else {
+        guide.innerHTML = '<div class="alert alert-info">Select a data type to see required columns.</div>';
+    }
+});
+</script>
+{% endblock %}

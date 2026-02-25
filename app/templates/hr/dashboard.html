@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} - HR Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>👥 HR Operations Center</h2>
+        <p class="text-muted">Welcome back, {{ current_user.full_name }}.</p>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-3">
+        <a href="{{ url_for('hr.upload') }}" class="text-decoration-none">
+            <div class="card text-white" style="background-color:#1a1a2e;">
+                <div class="card-body">
+                    <h5>📂 Upload Data</h5>
+                    <p class="mb-0">Sales, Inventory, Employees, Expenses</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+    
+{% endblock %}

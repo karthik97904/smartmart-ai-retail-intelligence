@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">SmartMart Executive Command Center</h2>
+
+    <!-- KPI CARDS -->
+    <div class="row text-center">
+
+        <div class="col-md-2">
+            <div class="card shadow-sm p-3">
+                <h6>Total Revenue</h6>
+                <h4 id="revenue">Loading...</h4>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card shadow-sm p-3">
+                <h6>Net Profit</h6>
+                <h4 id="profit">Loading...</h4>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card shadow-sm p-3">
+                <h6>Risk Score</h6>
+                <h4 id="riskScore">Loading...</h4>
+                <span id="riskLevel" class="badge"></span>
+            </div>
+        </div>
+
+        
+
+        <div class="col-md-2">
+            <div class="card shadow-sm p-3">
+                <h6>Opportunity Score</h6>
+                <h4 id="opportunity">Loading...</h4>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- FORECAST CHART -->
+    <div class="card mt-4 shadow-sm p-3">
+        <h5>Revenue Forecast Trend</h5>
+        <canvas id="forecastChart"></canvas>
+    </div>
+
+        <a href="/ceo/market-intel" class="btn btn-warning m-2">
+            View Market Intelligence
+        </a>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+async function loadDashboard() {
+
+    const analytics = await fetch("/ceo/api/analytics").then(r => r.json());
+    const risk = await fetch("/ceo/api/risk-index").then(r => r.json());
+    const forecast = await fetch("/ceo/api/forecast?period_type=monthly&periods=6").then(r => r.json());
+
+    // KPIs
+    document.getElementById("revenue").innerText = analytics.financials.total_revenue.toFixed(0);
+    document.getElementById("profit").innerText = analytics.financials.net_profit.toFixed(0);
+
+    document.getElementById("riskScore").innerText = risk.risk_score;
+    document.getElementById("opportunity").innerText = risk.opportunity_score;
+
+
+    // Risk Badge Color
+    const badge = document.getElementById("riskLevel");
+    badge.innerText = risk.risk_level;
+
+    if (risk.risk_level === "High" || risk.risk_level === "Critical") {
+        badge.className = "badge bg-danger";
+    } else if (risk.risk_level === "Moderate") {
+        badge.className = "badge bg-warning text-dark";
+    } else {
+        badge.className = "badge bg-success";
+    }
+
+    // Forecast Chart
+// ===== Forecast Chart =====
+
+const historicalLabels = forecast.historical.periods;
+const forecastLabels = forecast.forecast.periods;
+
+const allLabels = historicalLabels.concat(forecastLabels);
+const allRevenue = forecast.historical.revenue.concat(forecast.forecast.revenue);
+
+const chartCtx = document.getElementById("forecastChart").getContext("2d");
+
+new Chart(chartCtx, {
+    type: "line",
+    data: {
+        labels: allLabels,
+        datasets: [{
+            label: "Revenue Forecast",
+            data: allRevenue,
+            borderWidth: 2,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+}
+
+loadDashboard();
+</script>
+
+{% endblock %}

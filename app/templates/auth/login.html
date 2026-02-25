@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %} - Login{% endblock %}
+
+{% block content %}
+<div class="login-split">
+
+    <!-- LEFT SIDE (FORM) -->
+    <div class="login-left">
+        <div class="login-card">
+
+            <div class="text-center mb-4">
+                <h2 class="fw-bold brand-title">SmartMart</h2>
+                <p class="small text-light">
+                    AI-Enabled Business Intelligence
+                </p>
+            </div>
+
+            <form method="POST">
+
+                <div class="mb-3">
+                    <label class="form-label text-light">Email Address</label>
+                    <input type="email" name="email"
+                           class="form-control"
+                           placeholder="Enter your email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-light">Password</label>
+                    <input type="password" name="password"
+                           class="form-control"
+                           placeholder="Enter your password" required>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="remember" class="form-check-input">
+                    <label class="form-check-label text-light small">
+                        Remember me
+                    </label>
+                </div>
+
+                <button type="submit" class="btn w-100 login-btn">
+                    Sign In
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE (IMAGE) -->
+    <div class="login-right">
+        <img src="{{ url_for('static', filename='images/login-illustration.png') }}"
+             class="login-image"
+             alt="SmartMart Illustration">
+    </div>
+
+</div>
+{% endblock %}
